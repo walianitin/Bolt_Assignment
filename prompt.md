@@ -1,4 +1,5 @@
 # Bolt Assignment — Product & Architecture Brief
+#PROMPT Structured as per follow 
 
 ## Overview
 
