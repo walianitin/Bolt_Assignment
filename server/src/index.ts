@@ -7,11 +7,22 @@ import { checkoutRouter } from './routes/checkout.js'
 
 const app = express()
 const port = Number(process.env.PORT) || 5000
-const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173'
+
+const allowedOrigins = (process.env.CLIENT_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
 
 app.use(
   cors({
-    origin: clientOrigin,
+    origin(origin, callback) {
+      // Allow non-browser tools (Postman, curl) with no Origin header
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true)
+        return
+      }
+      callback(new Error(`CORS blocked for origin: ${origin}`))
+    },
   }),
 )
 app.use(express.json())
